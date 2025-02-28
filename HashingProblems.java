@@ -1,5 +1,5 @@
 /*
- * *** YOUR NAME GOES HERE / YOUR SECTION NUMBER ***
+ * *** Nathan Hogg / Section 002 ***
  *
  * This HashingProblems object contains three methods / problems that you must
  * complete utilize the HashMap object within the Java's Collection Framework Library.
@@ -10,14 +10,11 @@
  *  - twoSums
  */
 
-import java.util.HashMap;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 class HashingProblems {
 
-    /*
+    /**
      * Method getAverage()
      *
      * This method accepts two parameters. The first is a HashMap object, while the second
@@ -29,45 +26,71 @@ class HashingProblems {
      * as (10+20)/2 = 15. Lets also say the keys ‘7’ and ‘8’ are in the array, but those keys
      * are not present in the HashMap. That means their corresponding values in the HashMap
      * are not included in the average calculation.
+     *
+     * To calculate the average, we first declare doubles for sum and commonCnt. Sum is a
+     * running total of the values that are present in both the array and the HashMap.
+     * commonCnt is a running total of the values that are common to both, since we need
+     * to take the average of values found in both structures.
+     * We use an enhanced for loop to iterate over the HashMap, and another for loop
+     * to iterate over the array. This allows us to check each value in the array
+     * against each element in the map. We then check if the values are equal, and
+     * add to sum and increment commonCnt. Finally, we return sum / commonCnt.
+     *
+     * @param map the map to check against array
+     * @param array the array to check against map
+     * @return sum / commonCnt the average of the common values
      */
 
     public double getAverage(HashMap<Integer, Integer> map, int[] array) {
 
-        /*
-         * ADD YOUR CODE HERE - DO NOT FORGET TO ADD YOU NAME AT TOP OF FILE
-         *
-         * Note: if NO values found in common between the HashMap and supplied array,
-         * returning 0.0 is NOT correct, as that is not the average value. Whereas
-         * returning 0.0/0.0 IS correct (which would return a non-number).
-         */
+        double sum = 0;
+        double commonCnt = 0;
 
-         return 0.0 / 0.0;
+        for (Integer key : map.keySet()) {
+            for (int i = 0; i < array.length; i++) {
+                if (array[i] == key) {
+                    sum += map.get(i);
+                    commonCnt++;
+                }
+            }
+        }
+
+         return sum / commonCnt;
   }
 
-
-    /*
+    /**
      * Method odd()
      *
      * This method accepts a HashMap object, and returns an ArrayList object with the
      * values of the corresponding keys that are odd.
-     */
+     *
+     * To determine what elements keys correspond to odd values, we first need to
+     * create a new array list to hold these values. Then, we obtain the key set
+     * of the Hash Map so that we can iterate over it.
+     * We then use an enhanced for loop to iterate over each key in the keyset.
+     * We perform a check to see if the current value is odd. If it is, we add
+     * it to the result Array List.
+     * Finally, we return result.
+     *
+     * @param map the map to extract odd values from
+     * @return result an ArrayList object containing odd values
+     **/
 
   public ArrayList<String> odd(HashMap<Integer, String> map) {
     
       ArrayList<String> result = new ArrayList<>();
+      Set<Integer> keySet = map.keySet();
 
-      /*
-       * ADD YOUR CODE HERE
-       *
-       * Hint: Consider iterating over the HashMap using the keySet method.
-       */
-
-
+      for (Integer key : keySet) {
+          if (key % 2 != 0) {
+              result.add(map.get(key));
+          }
+      }
       return result;
   }
 
 
-  /*
+  /**
    * Method twoSums()
    *
    * You ARE to solve this problem in time complexity O(n). The submittals will be spot checked.
@@ -102,15 +125,32 @@ class HashingProblems {
    * This will result in a time complexity of O(n) for the overall method.
    *
    * NOTE: Solving using a HashMap or HashSet is fine (either is okay). HashSet may be easier to code?
-   */
+   *
+   * Rather than approaching this problem with a double for loop approach, we need to use a HashSet to ensure
+   * that our solution operates in constant time. To do this, we first declare a new HashSet and
+   * iterate over each element in the numbers array and add it to the HashSet.
+   * Next, we create a count variable to keep a running count of correct sums.
+   * Using an enhanced for loop, we can iterate over each element in the set and check if the set
+   * contains i - k, which signifies that we have found a sum. We increment cnt and return.
+   *
+   * @param numbers the array containing possible sums
+   * @param k the difference we are searching for
+   * @return cnt the number of correct two-sums found in the array
+   **/
 
   public int twoSums(int[] numbers, int k) {
 
-      /*
-       * ADD YOUR CODE HERE
-       */
-
-      return -1;
+      HashSet<Integer> set = new HashSet<>();
+      for (int number : numbers) {
+          set.add(number);
+      }
+      int cnt = 0;
+      for (int i : set) {
+          if (set.contains(i - k)) {
+              cnt++;
+          }
+      }
+      return cnt;
   }
 
 } /* end class HashingProblems */

@@ -1,5 +1,5 @@
 /*
- * *** YOUR NAME GOES HERE / YOUR SECTION NUMBER ***
+ * *** Nathan Hogg / 002 ***
  *
  * This hashMap object represents an over simplification of Java's implementation of HashMap within
  * Java's Collection Framework Library. You are to complete the following methods:
@@ -72,10 +72,8 @@
  *
  ****************************************/
 
-import java.util.ArrayList;
-import java.util.Map;
-import java.util.Set;
-import java.util.HashSet;
+import javax.naming.AuthenticationNotSupportedException;
+import java.util.*;
 
 
 /**
@@ -197,6 +195,7 @@ class myHashMap<K,V> {
             }
             head = head.next;
         }
+
         return null;
     }
 
@@ -220,17 +219,23 @@ class myHashMap<K,V> {
      */
 
     public V remove(K key) {
+        int index = getBucketIndex(key);
+        HashNode<K, V> head = bucket.get(index);
+        HashNode<K, V> prev = null;
 
-        /*
-         * ADD YOUR CODE HERE
-         *
-         * Review the code in the whole object to understand teh data structures layout.
-         * Additionally, review the method put() for inserting a new Key / Value pair into
-         * the HashMap. This method will do the opposite by removing an element. Do see
-         * the return value discussion in this method's prologue to make sure the correct
-         * return value is returned the invoking function based on the remove outcome.
-         */
-
+        while (head != null) {
+            if (head.key.equals(key)) {
+                if (prev == null) {
+                    bucket.set(index, head.next);
+                } else {
+                    prev.next = head.next;
+                }
+                size--;
+                return head.value;
+            }
+            prev = head;
+            head = head.next;
+        }
         return null;
     }
 
@@ -240,12 +245,12 @@ class myHashMap<K,V> {
      *
      * Removes the entry for the specified key only if it is currently mapped to some value
      *
-     * @param: key - key for identifying <k,v>
-     * @param: val - will remove <k,v> only if existing value 
+     * @param key - key for identifying <k,v>
+     * @param val - will remove <k,v> only if existing value
      *               equals val
      *
-     * @return: true if deleted, else false
-     */
+     * @return true if deleted, else false
+     **/
 
     public boolean remove(K key, V val) {
 
@@ -256,8 +261,6 @@ class myHashMap<K,V> {
             return false;
         }
 
-        // Key was found and its value equals the passed
-        // parameter 'val'
         remove(key);
 
         return true;
@@ -398,15 +401,18 @@ class myHashMap<K,V> {
      */
 
     public V replace(K key, V val) {
-
-        /*
-         * ADD YOUR CODE HERE - DO NOT FORGET TO ADD YOUR NAME AT TOP OF FILE
-         *
-         * Make sure you return the proper value based on the outcome of this method's
-         * replace (see method's prologue above).
-         */
-
-        return val;
+        int index = getBucketIndex(key);
+        HashNode<K, V> head = bucket.get(index);
+        V oldVal;
+        while (head != null) {
+            if (head.key.equals(key)) {
+                oldVal = head.value;
+                head.value = val;
+                return oldVal;
+            }
+            head = head.next;
+        }
+        return null;
     }
 
     
@@ -426,13 +432,16 @@ class myHashMap<K,V> {
      */
 
     public boolean replace(K key, V oldVal, V newVal) {
+        int index = getBucketIndex(key);
+        HashNode<K, V> head = bucket.get(index);
 
-        /*
-         * ADD YOUR CODE HERE
-         *
-         * This method should apply the precondition (aka, the Key already exists with the
-         * value 'oldval', and is so, it SHOULD call replace(K, V) for code reuse.
-         */
+        while (head != null) {
+            if (head.key.equals(key) && head.value.equals(oldVal)) {
+                head.value = newVal;
+                return true;
+            }
+            head = head.next;
+        }
 
         return false;
     }
